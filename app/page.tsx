@@ -766,7 +766,6 @@ export default function InfluencerSchedule() {
     const month = currentDate.getMonth()
 
     const firstDay = new Date(year, month, 1)
-    const lastDay = new Date(year, month + 1, 0)
     const startDate = new Date(firstDay)
     startDate.setDate(startDate.getDate() - firstDay.getDay())
 
@@ -816,7 +815,7 @@ export default function InfluencerSchedule() {
         inf.id === id
           ? {
               ...inf,
-              contactStatus: status as any,
+              contactStatus: status as Influencer["contactStatus"],
               contactsRealized: status === "realizado" ? inf.contactsRealized + 1 : inf.contactsRealized,
               lastContactDate: status === "realizado" ? new Date().toISOString().split("T")[0] : inf.lastContactDate,
               isPending: status === "pendente",
@@ -1040,7 +1039,7 @@ export default function InfluencerSchedule() {
                   <Label htmlFor="niche">Nicho</Label>
                   <Select
                     value={newInfluencer.niche}
-                    onChange={(e) => setNewInfluencer((prev) => ({ ...prev, niche: e.target.value }))}
+                    onValueChange={(value) => setNewInfluencer((prev) => ({ ...prev, niche: value }))}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione o nicho" />
@@ -1083,7 +1082,11 @@ export default function InfluencerSchedule() {
                     value={newInfluencer.frequency}
                     onValueChange={(value) => {
                       const maxContacts = getMaxContacts(value)
-                      setNewInfluencer((prev) => ({ ...prev, frequency: value as any, maxContactsMonth: maxContacts }))
+                      setNewInfluencer((prev) => ({
+                        ...prev,
+                        frequency: value as Influencer["frequency"],
+                        maxContactsMonth: maxContacts,
+                      }))
                     }}
                   >
                     <SelectTrigger>
@@ -1153,7 +1156,7 @@ export default function InfluencerSchedule() {
                   <Select
                     value={newInfluencer.relationshipLevel}
                     onValueChange={(value) =>
-                      setNewInfluencer((prev) => ({ ...prev, relationshipLevel: value as any }))
+                      setNewInfluencer((prev) => ({ ...prev, relationshipLevel: value as Influencer["relationshipLevel"] }))
                     }
                   >
                     <SelectTrigger>
@@ -2124,7 +2127,9 @@ export default function InfluencerSchedule() {
                     onValueChange={(value) => {
                       const maxContacts = getMaxContacts(value)
                       setEditingInfluencer((prev) =>
-                        prev ? { ...prev, frequency: value as any, maxContactsMonth: maxContacts } : null,
+                        prev
+                          ? { ...prev, frequency: value as Influencer["frequency"], maxContactsMonth: maxContacts }
+                          : null,
                       )
                     }}
                   >
@@ -2201,7 +2206,9 @@ export default function InfluencerSchedule() {
                   <Select
                     value={editingInfluencer.relationshipLevel}
                     onValueChange={(value) =>
-                      setEditingInfluencer((prev) => (prev ? { ...prev, relationshipLevel: value as any } : null))
+                      setEditingInfluencer((prev) =>
+                        prev ? { ...prev, relationshipLevel: value as Influencer["relationshipLevel"] } : null,
+                      )
                     }
                   >
                     <SelectTrigger>
